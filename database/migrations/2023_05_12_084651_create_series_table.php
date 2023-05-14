@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('series', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('original_title');
+            $table->string('original_title')->nullable();
             $table->string('slug')->unique();
             $table->enum('type', ['Movie', 'Tv']);
             $table->string('score');

@@ -32,7 +32,31 @@ class DashboardController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       
+        $data = $request->validate([
+            'title' => 'required|max:100|string',
+            'type' => 'required|string',
+            'image' => '|file|max:2048',
+            'score' => 'required|string',
+            'status' => 'required|string',
+            'synopsis' => 'string|max:255',
+        ]);
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('public/series-images');
+            $data['image'] = basename($imagePath);
+        }
+        $series = new Series();
+        $series->title = $data['title'];
+        $series->setSlugAttribute($data['title']);
+        $series->type = $data['type'];
+        $series->image = $data['image'];
+        $series->score = $data['score'];
+        $series->status = $data['status'];
+        $series->synopsis = $data['synopsis'];
+        $series->save();
+
+        return redirect()->route('series.index')->with('success', 'Post berhasil disimpan');
     }
 
     /**
