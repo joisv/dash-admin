@@ -1,10 +1,13 @@
 <script setup>
 import { defineProps } from 'vue';
 
+import ButtonComponent from './ButtonComponent.vue';
+
 defineProps({
     series: Array,
     headers: Array
 })
+
 </script>
 
 <template>
@@ -31,8 +34,15 @@ defineProps({
                         <td class="px-6 py-4">
                             {{ item.type }}
                         </td>
-                        <td class="px-6 py-4">
-                            Edit
+                        <td class="px-6 py-4 space-x-2">
+                           <ButtonComponent 
+                                class="bg-blue-700 text-secondaryBtn"
+                                children="edit"
+                           />
+                           <ButtonComponent 
+                                class="bg-red-600 text-secondaryBtn"
+                                children="delete"
+                           />
                         </td>
                     </tr>
                 </template>
