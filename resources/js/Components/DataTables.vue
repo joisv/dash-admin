@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps } from 'vue';
+import { useForm } from '@inertiajs/vue3';
 
 import ButtonComponent from './ButtonComponent.vue';
 
@@ -7,6 +8,14 @@ defineProps({
     series: Array,
     headers: Array
 })
+
+const form = useForm({})
+
+function destroy(id) {
+    if(confirm('are you sure?')){
+        form.delete(route('series.destroy', id));
+    }
+}
 
 </script>
 
@@ -34,7 +43,7 @@ defineProps({
                         <td class="px-6 py-4">
                             {{ item.type }}
                         </td>
-                        <td class="px-6 py-4 space-x-2">
+                        <td class="px-6 py-4 flex space-x-2">
                            <ButtonComponent 
                                 class="bg-blue-700 text-secondaryBtn"
                                 children="edit"
@@ -42,6 +51,7 @@ defineProps({
                            <ButtonComponent 
                                 class="bg-red-600 text-secondaryBtn"
                                 children="delete"
+                                @click="destroy(item.id)"
                            />
                         </td>
                     </tr>

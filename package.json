@@ -25,6 +25,7 @@
         "datatables.net-select": "^1.6.2",
         "datatables.net-vue3": "^2.1.0",
         "lodash": "^4.17.21",
-        "lv3-datatable": "^0.1.1"
+        "lv3-datatable": "^0.1.1",
+        "slugify": "^1.6.6"
     }
 }

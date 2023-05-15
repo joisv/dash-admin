@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Genres;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -22,5 +23,10 @@ class Series extends Model
         }
         
         $this->attributes['slug'] = $slug;
+    }
+
+    public function genres()
+    {
+        return $this->belongsToMany(Genres::class, 'series_genres');
     }
 }

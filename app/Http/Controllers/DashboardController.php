@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Genres;
 use App\Models\Series;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -13,7 +15,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $series = Series::all();
+        $series = Series::orderBy('created_at', 'desc')->get();
         return Inertia::render('DashboardSeries/Index', [
             'series' => $series
         ]);
@@ -24,7 +26,10 @@ class DashboardController extends Controller
      */
     public function create()
     {
-        return Inertia::render('DashboardSeries/Create');
+        $genres = Genres::all();
+        return Inertia::render('DashboardSeries/Create', [
+            'genres' => $genres
+        ]);
     }
 
     /**
@@ -32,11 +37,12 @@ class DashboardController extends Controller
      */
     public function store(Request $request)
     {
-       
         $data = $request->validate([
             'title' => 'required|max:100|string',
+            'original_title' => 'max:100|string',
             'type' => 'required|string',
             'image' => '|file|max:2048',
+            'genres' => 'required',
             'score' => 'required|string',
             'status' => 'required|string',
             'synopsis' => 'string|max:255',
@@ -48,6 +54,7 @@ class DashboardController extends Controller
         }
         $series = new Series();
         $series->title = $data['title'];
+        $series->original_title = $data['original_title'];
         $series->setSlugAttribute($data['title']);
         $series->type = $data['type'];
         $series->image = $data['image'];
@@ -55,8 +62,9 @@ class DashboardController extends Controller
         $series->status = $data['status'];
         $series->synopsis = $data['synopsis'];
         $series->save();
+        $series->genres()->sync($data['genres']);
 
-        return redirect()->route('series.index')->with('success', 'Post berhasil disimpan');
+        return redirect()->route('series.index')->with('message', 'Post berhasil disimpan');
     }
 
     /**
@@ -86,12 +94,15 @@ class DashboardController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Series $series)
     {
-        //
+        if ($series->image)
+        {
+         Storage::delete($series->image);
+        }
+        Series::destroy($series->id);
+        sleep(2);
+        return redirect()->route('series.index')->with('message', 'Post Delete Successfully');
     }
 
-    public function search(Request $request, $query){
-        return response()->json(['query' => $query]);
-    } 
 }

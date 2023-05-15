@@ -19,8 +19,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <button :type="props.type">
-        <div class="px-2 py-1 rounded-sm" :class="variant ? props.class : common">
+    <button :type="props.type" class="active:bg-gray-500">
+        <div class="px-2 py-1 rounded-sm " :class="variant ? props.class : common">
             <h1>{{ children }}</h1>
         </div>
     </button>
