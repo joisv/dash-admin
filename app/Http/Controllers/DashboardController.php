@@ -13,11 +13,17 @@ class DashboardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $series = Series::orderBy('created_at', 'desc')->get();
+        // $series = Series::orderBy('created_at', 'desc')->get();
+        // dd($series);
         return Inertia::render('DashboardSeries/Index', [
-            'series' => $series
+            'series' => Series::query()
+                                ->when($request->input('search'),function($query, $search) {
+                                    $query->where('title','like','%'.$search.'%')
+                                    ->OrWhere('original_title','like','%'.$search.'%');
+                                })->orderBy('created_at', 'desc')->paginate(10)->withQueryString(),
+            'filters' => $request->only(['search'])
         ]);
     }
 

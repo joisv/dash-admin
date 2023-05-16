@@ -4,8 +4,11 @@ import { useForm } from '@inertiajs/vue3';
 
 import ButtonComponent from './ButtonComponent.vue';
 
-defineProps({
-    series: Array,
+const props = defineProps({
+    series:{
+        type: Object,
+        default: () => ({})
+    },
     headers: Array
 })
 
@@ -32,7 +35,7 @@ function destroy(id) {
                 </tr>
             </thead>
             <tbody>
-                <template v-for="item in series" :key="series.id">
+                <template v-for="item in series.data" :key="series.id">
                 <tr class="bg-secondaryBtn border-b dark:bg-gray-900 dark:border-gray-700">
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {{ item.title }}

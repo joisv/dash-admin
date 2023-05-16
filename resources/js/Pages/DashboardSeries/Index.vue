@@ -1,17 +1,40 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useForm} from '@inertiajs/vue3';
 
 import SearchInput from '../../Components/SearchInput.vue';
 import AppLayout from '../../Layouts/AppLayout.vue';
 import DataTables from '../../Components/DataTables.vue';
 import ButtonComponent from '../../Components/ButtonComponent.vue';
+import Pagination from '../../Components/Pagination.vue';
 
-defineProps({ series: Array })
+const props = defineProps({ 
+    series: {
+        type: Object,
+        default: () => ({})
+    },
+    filters: {
+        type: Object,
+        default: () => ({}),
+    },
+ })
+ console.log(props.series);
+
 const headers = ref ([ 'Title', 'Oiginat title', 'Type', 'Actions' ])
 const searchResult = ref([])
 const flash = ref(true)
 const form = useForm({})
+let search = ref(props.filters.search);
+
+watch(search, (value)=> {
+    form.get(route('series.index', 
+        { search: value },
+        {
+            preserveState: true,
+            replace: true,
+        }
+    ))
+})
 
 const submit = () => {
     form.get(route('series.create'))
@@ -25,6 +48,8 @@ function handleFlash() {
 }
 
 </script>
+
+
 
 <template>
     <AppLayout title="Dashboard">
@@ -49,15 +74,15 @@ function handleFlash() {
                             />
                         </form>
                         <SearchInput 
-                            @search-updated="handleSearchUpdated"
+                            v-model="search"
                         />
                     </div>
                     <DataTables 
                         :series="series"
                         :headers="headers"
                     />
-                    <Modal />
                 </div>
+                <Pagination :data="series"/>
             </div>
     </AppLayout>
 </template>
