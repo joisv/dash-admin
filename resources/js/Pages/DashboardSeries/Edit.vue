@@ -1,54 +1,44 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue'
 
-import AppLayout from '@/Layouts/AppLayout.vue';
-import InputForm from '@/Components/InputForm.vue';
-import InputError from '@/Components/InputError.vue';
+import AppLayout from '../../Layouts/AppLayout.vue';
+import InputForm from '../../Components/InputForm.vue';
+import SelectInput from '../../Components/SelectInput.vue'
 import InputImgSvg from '@/Components/InputImgSvg.vue'
-import SelectInput from '@/Components/SelectInput.vue';
-import ButtonComponent from '@/Components/ButtonComponent.vue';
+import ButtonComponent from '@/Components/ButtonComponent.vue'
 
 const props = defineProps({
+    series: {
+        type: Object,
+        default: () => ({})
+    },
     genres: {
         type: Object,
         default: () => ({})
-    }
-})
-const imagePreview = ref(null)
-const options = ['Movie', 'Tv']
-const status = ['ongoing', 'complete', 'pending']
-const form = useForm({
-    title: '',
-    original_title: '',
-    type: '',
-    score: '',
-    genres: [],
-    image: null,
-    status: '',
-    synopsis: ''
+    },
 });
-
-const handleImage = (event) => {
-    form.image = event.target.files[0];
-    if (form.image) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        imagePreview.value = reader.result;
-      };
-      reader.readAsDataURL(form.image);
-    } else {
-      imagePreview.value = null;
-    }
-}
-
+console.log(props.series);
+const options = ['Movie', 'Tv']
+const status = ['ongoning', 'complete', 'pending']
+const form = useForm({
+    title: props.series.title,
+    original_title: props.series.original_title,
+    type: props.series.type,
+    score: props.series.score,
+    genres: props.series.genres,
+    image: props.series.image,
+    status: props.series.status,
+    synopsis: props.series.synopsis
+})
 const submit = () => {
-    form.post(route('series.store'))
+    form.put(route('series.update', props.series.id))
 }
+console.log(form.genres[0]);
+
 </script>
 
 <template>
-    <AppLayout title="Add series">
+    <AppLayout title="Edit">
         <template #header>
             <div class="w-full flex items-center justify-center">
                 <div class="max-w-3xl h-full w-full">
@@ -100,7 +90,6 @@ const submit = () => {
                                     title="Types"
                                     ids="type"
                                 />
-                                <InputError class="mt-2" :message="form.errors.type" />
                                 <InputForm 
                                     title="Score"
                                     :required="true"
@@ -119,9 +108,13 @@ const submit = () => {
                             ids="status"
                         />
                         <div class="w-full h-28 overflow-auto mb-4 border-2 border-gray-200 rounded-md p-2 flex flex-wrap space-x-2">
-                            <template v-for="( genre, index ) in props.genres" :key="genre.id">
+                            <template v-for="( genre, index ) in genres" :key="genre.id">
                                 <div class="p-1 w-fit h-fit border-2 border-gray-400 rounded-md ">
-                                     <input type="checkbox" :name="`genres${index+1}`" :id="`genres${index+1}`" class="opacity-50 absolute" :value="genre.id" v-model="form.genres" >
+                                     <input type="checkbox" :name="`genres${index+1}`" :id="`genres${index+1}`" class="opacity-50 absolute" 
+                                     :value="genre.id" 
+                                     v-model="form.genres" 
+                                     :checked="form.genres.includes(genre.id)">
+
                                      <label :for="`genres${index+1}`" class="px-2 py-1 font-medium text-primaryBtn">{{ genre.names }}</label>
                                 </div>
                             </template>

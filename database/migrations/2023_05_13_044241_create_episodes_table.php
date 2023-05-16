@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('episodes', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->foreignId('series_id');
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }

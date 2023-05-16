@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EpisodesController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,5 @@ Route::middleware([
     })->name('dashboard');
 
     Route::resource('/dashboard/series', DashboardController::class)->names('series');
-
-    Route::get('/search', SearchController::class);
+    Route::resource('/dashboard/episodes', EpisodesController::class)->names('episodes');
 });

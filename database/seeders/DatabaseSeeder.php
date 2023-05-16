@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Episodes;
 use App\Models\Genres;
 use App\Models\Series;
 use Illuminate\Database\Seeder;
@@ -50,5 +51,25 @@ class DatabaseSeeder extends Seeder
             ]);
        }
 
+        Episodes::create([
+            'title' => 'death note episode 1',
+            'series_id' => '2',
+            'slug' => 'death-note-chapter-1'
+        ]);
+        Episodes::create([
+            'title' => 'death note episode 2',
+            'series_id' => '2',
+            'slug' => 'death-note-episode-2'
+        ]);
+        Episodes::create([
+            'title' => 'detektif connan episode 1',
+            'series_id' => '4',
+            'slug' => 'detektif-connan-episode-1'
+        ]);
+        Episodes::create([
+            'title' => 'Episode 1',
+            'series_id' => '3',
+            'slug' => 'cobaa-1'
+        ]);
     }
 }

@@ -57,6 +57,11 @@ const logout = () => {
                                     Series
                                 </NavLink>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('episodes.index')" :active="route().current('episodes.index')">
+                                    Episodes
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">

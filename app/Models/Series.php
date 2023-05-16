@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Genres;
+use App\Models\Episodes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -10,7 +11,7 @@ use Illuminate\Support\Str;
 class Series extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'slug', 'score', 'type', 'synopsis'];
+    protected $guarded = ['id'];
     public function setSlugAttribute($value)
     {
         $slug = Str::slug($value);
@@ -29,4 +30,10 @@ class Series extends Model
     {
         return $this->belongsToMany(Genres::class, 'series_genres');
     }
+
+    public function episodes()
+    {
+        return $this->hasMany(Episodes::class);
+    }
 }
+

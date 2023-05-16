@@ -1,24 +1,11 @@
 <script setup>
-import { defineProps } from 'vue';
-import { useForm } from '@inertiajs/vue3';
-
-import ButtonComponent from './ButtonComponent.vue';
-
 const props = defineProps({
-    series:{
-        type: Object,
+    headers:{
+        type: Array,
         default: () => ({})
     },
-    headers: Array
 })
 
-const form = useForm({})
-
-function destroy(id) {
-    if(confirm('are you sure?')){
-        form.delete(route('series.destroy', id));
-    }
-}
 
 </script>
 
@@ -35,30 +22,9 @@ function destroy(id) {
                 </tr>
             </thead>
             <tbody>
-                <template v-for="item in series.data" :key="series.id">
-                <tr class="bg-secondaryBtn border-b dark:bg-gray-900 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{ item.title }}
-                        </th>
-                        <td class="px-6 py-4">
-                            {{ item.original_title }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ item.type }}
-                        </td>
-                        <td class="px-6 py-4 flex space-x-2">
-                           <ButtonComponent 
-                                class="bg-blue-700 text-secondaryBtn"
-                                children="edit"
-                           />
-                           <ButtonComponent 
-                                class="bg-red-600 text-secondaryBtn"
-                                children="delete"
-                                @click="destroy(item.id)"
-                           />
-                        </td>
-                    </tr>
-                </template>
+                <slot>
+
+                </slot>
             </tbody>
         </table>
     </div>

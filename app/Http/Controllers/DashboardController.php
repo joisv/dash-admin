@@ -19,10 +19,10 @@ class DashboardController extends Controller
         // dd($series);
         return Inertia::render('DashboardSeries/Index', [
             'series' => Series::query()
-                                ->when($request->input('search'),function($query, $search) {
-                                    $query->where('title','like','%'.$search.'%')
-                                    ->OrWhere('original_title','like','%'.$search.'%');
-                                })->orderBy('created_at', 'desc')->paginate(10)->withQueryString(),
+                        ->when($request->input('search'),function($query, $search) {
+                            $query->where('title','like','%'.$search.'%')
+                            ->OrWhere('original_title','like','%'.$search.'%');
+                        })->orderBy('created_at', 'desc')->paginate(10)->withQueryString(),
             'filters' => $request->only(['search'])
         ]);
     }
@@ -84,9 +84,12 @@ class DashboardController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Series $series)
     {
-        //
+        return Inertia::render('DashboardSeries/Edit', [
+            'series' => $series->with('genres')->find($series->id),
+            'genres' => Genres::all()
+        ]);
     }
 
     /**
