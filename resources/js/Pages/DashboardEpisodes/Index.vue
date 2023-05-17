@@ -18,10 +18,7 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    series: {
-        type: Object,
-        default: () => ({}),
-    }
+   
 })
 
 console.log(props.episodes.data);
@@ -74,7 +71,6 @@ function edit(id) {
         </template>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 px-2">
                 <div class="bg-secondaryBtn overflow-hidden shadow-xl sm:rounded-lg md:p-10 p-2">
-                    <div class="bg-secondaryBtn overflow-hidden sm:rounded-lg md:p-10 p-2">
                         <div class="flex justify-between items-center space-x-3 sm:space-x-10">
                             <form @submit.prevent="submit">
                                 <ButtonComponent 
@@ -114,7 +110,6 @@ function edit(id) {
                             </tr>
                         </template>
                     </DataTables>
-                    </div>
                     <!-- <Pagination :data="episodes"/> -->
                 </div>
             </div>

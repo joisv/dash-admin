@@ -1,6 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 import AppLayout from '@/Layouts/AppLayout.vue';
 import InputForm from '@/Components/InputForm.vue';
@@ -16,6 +16,7 @@ const props = defineProps({
     }
 })
 const imagePreview = ref(null)
+const isResolutions = ref(false)
 const options = ['Movie', 'Tv']
 const status = ['ongoing', 'complete', 'pending']
 const form = useForm({
@@ -26,8 +27,24 @@ const form = useForm({
     genres: [],
     image: null,
     status: '',
-    synopsis: ''
+    synopsis: '',
+    resolutions: [],
 });
+
+watchEffect(() => {
+    form.type === 'Movie' ? isResolutions.value = true : form.type === 'Tv' ? isResolutions.value = false : false
+})
+
+const addResolutions = () => {
+    form.resolutions.push({
+        resolution: '',
+        url: ''
+    });
+}
+
+const removeResolutons = (index) => {
+    form.resolutions.splice(index, 1);
+} 
 
 const handleImage = (event) => {
     form.image = event.target.files[0];
@@ -118,6 +135,40 @@ const submit = () => {
                             :values="status"
                             ids="status"
                         />
+                        <div v-if="isResolutions">
+                            <ButtonComponent 
+                                class="bg-accent hover:bg-red-500 focus:ring-4 focus:ring-orange-200"
+                                children="add"
+                                type="button"
+                                @click="addResolutions"
+                                />
+                            <template v-for="(resolution, index) in form.resolutions">
+                                <div class="flex justify-between items-center space-x-3 w-full">
+                                    <ButtonComponent 
+                                        class="bg-red-400 hover:bg-red-500 focus:ring-4 focus:ring-red-300 h-fit"
+                                        children="del"
+                                        type="button"
+                                        @click="removeResolutons(index)"
+                                        />
+                                    <div class="mb-6">
+                                        <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Resolutions</label>
+                                        <input type="text" id="default-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="720p"
+                                            v-model="resolution.resolution"
+                                            :aria-label="`resolution ${index +1 } resolution`"
+                                        >
+                                    </div>
+                                    <div class="mb-6 w-[75%]">
+                                        <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">url</label>
+                                        <input type="text" id="default-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="https://ia801400.us.archive.org/0/items/od-engksj2829nc/od-engksj2829nc-hd-11.mp4"
+                                            v-model="resolution.url"
+                                            :aria-label="`resolution ${index + 1} url`"
+                                        >
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
                         <div class="w-full h-28 overflow-auto mb-4 border-2 border-gray-200 rounded-md p-2 flex flex-wrap space-x-2">
                             <template v-for="( genre, index ) in props.genres" :key="genre.id">
                                 <div class="p-1 w-fit h-fit border-2 border-gray-400 rounded-md ">

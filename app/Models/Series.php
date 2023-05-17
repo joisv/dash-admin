@@ -35,5 +35,9 @@ class Series extends Model
     {
         return $this->hasMany(Episodes::class);
     }
+
+    public function resolutions() {
+        return $this->hasMany(Resolutions::class);
+    }
 }
 

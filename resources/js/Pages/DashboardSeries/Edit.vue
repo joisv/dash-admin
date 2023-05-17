@@ -17,7 +17,6 @@ const props = defineProps({
         default: () => ({})
     },
 });
-console.log(props.series);
 const options = ['Movie', 'Tv']
 const status = ['ongoning', 'complete', 'pending']
 const form = useForm({
@@ -33,7 +32,7 @@ const form = useForm({
 const submit = () => {
     form.put(route('series.update', props.series.id))
 }
-console.log(form.genres[0]);
+console.log(form.genres);
 
 </script>
 
@@ -112,8 +111,7 @@ console.log(form.genres[0]);
                                 <div class="p-1 w-fit h-fit border-2 border-gray-400 rounded-md ">
                                      <input type="checkbox" :name="`genres${index+1}`" :id="`genres${index+1}`" class="opacity-50 absolute" 
                                      :value="genre.id" 
-                                     v-model="form.genres" 
-                                     :checked="form.genres.includes(genre.id)">
+                                     v-model="form.genres" >
 
                                      <label :for="`genres${index+1}`" class="px-2 py-1 font-medium text-primaryBtn">{{ genre.names }}</label>
                                 </div>

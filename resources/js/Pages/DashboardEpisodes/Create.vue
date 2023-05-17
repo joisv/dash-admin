@@ -11,7 +11,6 @@ const props = defineProps({
         default: () => ({})
     }
 })
-console.log(props.series);
 const form = useForm({
     title: '',
     series_id: ''

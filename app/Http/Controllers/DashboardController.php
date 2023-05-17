@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Episodes;
 use App\Models\Genres;
 use App\Models\Series;
 use Illuminate\Http\Request;
@@ -43,6 +44,7 @@ class DashboardController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->resolutions);
         $data = $request->validate([
             'title' => 'required|max:100|string',
             'original_title' => 'max:100|string',
@@ -52,12 +54,16 @@ class DashboardController extends Controller
             'score' => 'required|string',
             'status' => 'required|string',
             'synopsis' => 'string|max:255',
+            'resolutions' => 'array'
         ]);
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imagePath = $image->store('public/series-images');
             $data['image'] = basename($imagePath);
         }
+        // $resol = [];
+        // $url = [];
+        
         $series = new Series();
         $series->title = $data['title'];
         $series->original_title = $data['original_title'];
@@ -69,6 +75,15 @@ class DashboardController extends Controller
         $series->synopsis = $data['synopsis'];
         $series->save();
         $series->genres()->sync($data['genres']);
+        
+        foreach ($data['resolutions'] as $resolution ) {
+            $resolutionData = [
+                'resolution' => $resolution['resolution'],
+                'url' => $resolution['url']
+            ];
+        
+            $series->resolutions()->create($resolutionData);
+        }
 
         return redirect()->route('series.index')->with('message', 'Post berhasil disimpan');
     }

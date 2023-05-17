@@ -29,4 +29,8 @@ class Episodes extends Model
         
         return $this->belongsTo(Series::class);
     }
+
+    public function resolutions() {
+        return $this->hasMany(Resolutions::class);
+    }
 }

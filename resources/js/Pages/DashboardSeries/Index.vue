@@ -87,6 +87,7 @@ function edit(id) {
                         </form>
                         <SearchInput 
                             v-model="search"
+                            placeholder="search me..."
                         />
                     </div>
                     <DataTables :headers="headers">
