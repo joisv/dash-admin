@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EpisodesController;
-use App\Http\Controllers\SearchController;
+use App\Http\Controllers\GenresController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -38,4 +38,5 @@ Route::middleware([
 
     Route::resource('/dashboard/series', DashboardController::class)->names('series');
     Route::resource('/dashboard/episodes', EpisodesController::class)->names('episodes');
+    Route::resource('/dashboard/genres', GenresController::class)->names('genres');
 });

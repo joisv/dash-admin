@@ -10,7 +10,7 @@ import SearchInput from '../../Components/SearchInput.vue';
 import DataTables from '../../Components/DataTables.vue';
 
 const props = defineProps({
-    episodes: {
+    genres: {
         type: Array,
         default: () => ({})
     },
@@ -28,7 +28,7 @@ let search = ref(props.filters.search);
 
 
 watch(search, (value)=> {
-    form.get(route('episodes.index', 
+    form.get(route('genres.index', 
         { search: value },
         {
             preserveState: true,
@@ -38,18 +38,18 @@ watch(search, (value)=> {
 })
 
 const submit = () => {
-    form.get(route('episodes.create'))
+    form.get(route('genres.create'))
 }
 function handleFlash() {
     flash.value = false
 }
 function destroy(id) {
-    if(confirm(`delete ${id}`)){
-        form.delete(route('episodes.destroy', id));
+    if(confirm(`are you sure?`)){
+        form.delete(route('genres.destroy', id));
     }
 }
 function edit(id) {
-    form.get(route('episodes.edit', id));
+    form.get(route('genres.edit', id));
 }
 </script>
 
@@ -74,7 +74,7 @@ function edit(id) {
                             <form @submit.prevent="submit">
                                 <ButtonComponent 
                                     class="bg-primaryBtn hover:bg-slate-800 focus:ring-4 focus:ring-slate-300"
-                                    children="Add Episode"
+                                    children="Add Genres"
                                     type="submit"
                                 />
                             </form>
@@ -84,13 +84,13 @@ function edit(id) {
                             />
                         </div>
                         <DataTables :headers="headers">
-                        <template v-for="(item, index ) in episodes.data">
+                        <template v-for="(item, index ) in genres.data">
                             <tr class="bg-secondaryBtn border-b dark:bg-gray-900 dark:border-gray-700">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ index + 1 }}
                                     </th>
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ item.title }}
+                                        {{ item.names }}
                                     </th>
                                     <td class="px-6 py-4 flex space-x-2">
                                     <ButtonComponent 
@@ -110,7 +110,7 @@ function edit(id) {
                         </template>
                     </DataTables>
                 </div>
-                <Pagination :data="episodes"/>
+                <!-- <Pagination :data="episodes"/> -->
             </div>
      </AppLayout>
 </template>

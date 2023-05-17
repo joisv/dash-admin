@@ -46,7 +46,7 @@ const update = (id) => {
             <div class="w-full flex items-center justify-center">
                 <div class="max-w-3xl h-full w-full">
                     <h2 class="font-semibold text-xl text-gray-800 leading-tight selected">
-                        Create new episodes 
+                        Update episode
                     </h2>
                 </div>
             </div>
