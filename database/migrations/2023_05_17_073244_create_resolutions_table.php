@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('resolutions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('episode_id')->nullable();
+            $table->unsignedBigInteger('episodes_id')->nullable();
             $table->unsignedBigInteger('series_id')->nullable();
             $table->string('resolution');
             $table->string('url');
             $table->timestamps();
 
-            $table->foreign('episode_id')->references('id')->on('episodes')->onDelete('cascade');
+            $table->foreign('episodes_id')->references('id')->on('episodes')->onDelete('cascade');
             $table->foreign('series_id')->references('id')->on('series')->onDelete('cascade');
         });
     }

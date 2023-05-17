@@ -31,6 +31,7 @@ class Episodes extends Model
     }
 
     public function resolutions() {
+        
         return $this->hasMany(Resolutions::class);
     }
 }

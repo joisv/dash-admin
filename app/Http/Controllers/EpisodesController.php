@@ -40,7 +40,8 @@ class EpisodesController extends Controller
     {
        $data = $request->validate([
             'title' => 'string|max:100|required',
-            'series_id' => 'required'
+            'series_id' => 'required',
+            'resolutions' => 'array'
         ]);
 
        $episodes = new Episodes();
@@ -48,7 +49,14 @@ class EpisodesController extends Controller
        $episodes->setSlugAttribute($data['title']); 
        $episodes->series_id = $data['series_id'];
        $episodes->save(); 
-
+       foreach ($data['resolutions'] as $resolution ) {
+        $resolutionData = [
+            'resolution' => $resolution['resolution'],
+            'url' => $resolution['url']
+        ];
+    
+        $episodes->resolutions()->create($resolutionData);
+    }
        return redirect()->route('episodes.index')->with('message', 'Episode baru berhasil ditambahkan');
     }
 
@@ -67,7 +75,7 @@ class EpisodesController extends Controller
     {
         $episodes = Episodes::find($id);
         return Inertia::render('DashboardEpisodes/Edit', [
-            'episodes' => $episodes->with('series')->find($id),
+            'episodes' => $episodes->with(['series', 'resolutions'])->find($id),
             'series' => Series::all()
         ]);
     }
@@ -75,21 +83,34 @@ class EpisodesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        dd($request);
         $data = $request->validate([
             'title' => 'string|max:100|required',
-            'series_id' => 'required'
+            'series_id' => 'required',
+            'resolutions' => 'array'
         ]);
-
-        $episode = Episodes::find($request->id);
+    
+        $episode = Episodes::findOrFail($id);
         $episode->title = $data['title'];
         $episode->setSlugAttribute($data['title']); 
         $episode->series_id = $data['series_id'];
         $episode->save(); 
-
-        return redirect()->route('episodes.index')->with('message', 'Episode baru berhasil diperbarui');
+    
+        // Hapus semua resolusi yang terkait dengan episode saat ini
+        $episode->resolutions()->delete();
+    
+        // Tambahkan resolusi baru
+        foreach ($data['resolutions'] as $resolution ) {
+            $resolutionData = [
+                'resolution' => $resolution['resolution'],
+                'url' => $resolution['url']
+            ];
+    
+            $episode->resolutions()->create($resolutionData);
+        }
+    
+        return redirect()->route('episodes.index')->with('message', 'Episode berhasil diperbarui');
     }
 
     /**
@@ -99,6 +120,7 @@ class EpisodesController extends Controller
     {
         $episodes = Episodes::find($id);
         $episodes->delete();
+        $episodes->resolutions()->delete();
         // sleep(2);
         return redirect()->route('episodes.index')->with('message', 'Post Deleted');
     }

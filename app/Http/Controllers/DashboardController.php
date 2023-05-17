@@ -44,16 +44,15 @@ class DashboardController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->resolutions);
         $data = $request->validate([
             'title' => 'required|max:100|string',
-            'original_title' => 'max:100|string',
+            'original_title' => 'max:100|string|nullable',
             'type' => 'required|string',
             'image' => '|file|max:2048',
             'genres' => 'required',
             'score' => 'required|string',
-            'status' => 'required|string',
-            'synopsis' => 'string|max:255',
+            'status' => 'nullable|string',
+            'synopsis' => 'string|max:255|nullable',
             'resolutions' => 'array'
         ]);
         if ($request->hasFile('image')) {
@@ -61,8 +60,6 @@ class DashboardController extends Controller
             $imagePath = $image->store('public/series-images');
             $data['image'] = basename($imagePath);
         }
-        // $resol = [];
-        // $url = [];
         
         $series = new Series();
         $series->title = $data['title'];
@@ -76,13 +73,15 @@ class DashboardController extends Controller
         $series->save();
         $series->genres()->sync($data['genres']);
         
-        foreach ($data['resolutions'] as $resolution ) {
-            $resolutionData = [
-                'resolution' => $resolution['resolution'],
-                'url' => $resolution['url']
-            ];
-        
-            $series->resolutions()->create($resolutionData);
+        if(isset($data['resolutions'])){
+            foreach ($data['resolutions'] as $resolution ) {
+                $resolutionData = [
+                    'resolution' => $resolution['resolution'],
+                    'url' => $resolution['url']
+                ];
+            
+                $series->resolutions()->create($resolutionData);
+            }
         }
 
         return redirect()->route('series.index')->with('message', 'Post berhasil disimpan');

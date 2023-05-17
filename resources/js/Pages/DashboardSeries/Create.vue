@@ -88,18 +88,19 @@ const submit = () => {
                     <form @submit.prevent="submit">
                         <InputForm 
                             title="Title"
-                            :required="true"
+                            :required="false"
                             type="text"
                             v-model="form.title"
                             
                         />
+                        <InputError class="mt-2" :message="form.errors.title" />
                         <InputForm 
                             title="Original_title"
                             :required="false"
                             type="text"
                             v-model="form.original_title"
                         />
-                        <InputError class="mt-2" :message="form.errors.title" />
+                        <InputError class="mt-2" :message="form.errors.original_title" />
                         <div class="flex w-full justify-between space-x-3 mb-4">
                             <div class="flex items-center justify-center md:w-[35%] w-[50%]">
                                 <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-36 sm:h-44 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -120,15 +121,15 @@ const submit = () => {
                                 <InputError class="mt-2" :message="form.errors.type" />
                                 <InputForm 
                                     title="Score"
-                                    :required="true"
+                                    :required="false"
                                     type="text"
                                     v-model="form.score"
                                 />
+                                <InputError class="mt-2" :message="form.errors.score" />
                             </div>
                            
                         </div>
                         
-                        <InputError class="mt-2" :message="form.errors.score" />
                         <SelectInput 
                             v-model="form.status"
                             title="Status"
@@ -136,12 +137,15 @@ const submit = () => {
                             ids="status"
                         />
                         <div v-if="isResolutions">
-                            <ButtonComponent 
-                                class="bg-accent hover:bg-red-500 focus:ring-4 focus:ring-orange-200"
-                                children="add"
-                                type="button"
-                                @click="addResolutions"
-                                />
+                           <div class="flex space-x-2">
+                                <ButtonComponent 
+                                    class="bg-accent hover:bg-red-500 focus:ring-4 focus:ring-orange-200"
+                                    children="add"
+                                    type="button"
+                                    @click="addResolutions"
+                                    />
+                                <p class="text-red-400 text-sm font-medium">*required</p>
+                           </div>
                             <template v-for="(resolution, index) in form.resolutions">
                                 <div class="flex justify-between items-center space-x-3 w-full">
                                     <ButtonComponent 
@@ -171,7 +175,7 @@ const submit = () => {
                         </div>
                         <div class="w-full h-28 overflow-auto mb-4 border-2 border-gray-200 rounded-md p-2 flex flex-wrap space-x-2">
                             <template v-for="( genre, index ) in props.genres" :key="genre.id">
-                                <div class="p-1 w-fit h-fit border-2 border-gray-400 rounded-md ">
+                                <div class="p-1 w-fit h-fit border-2 border-gray-400 rounded-md " :class="{'border-2 border-red-400' : form.errors.genres}">
                                      <input type="checkbox" :name="`genres${index+1}`" :id="`genres${index+1}`" class="opacity-50 absolute" :value="genre.id" v-model="form.genres" >
                                      <label :for="`genres${index+1}`" class="px-2 py-1 font-medium text-primaryBtn">{{ genre.names }}</label>
                                 </div>

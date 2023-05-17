@@ -4,6 +4,7 @@ import { useForm } from '@inertiajs/vue3';
 import AppLayout from '../../Layouts/AppLayout.vue';
 import InputForm from '../../Components/InputForm.vue';
 import ButtonComponent from '../../Components/ButtonComponent.vue';
+import InputError from '../../Components/InputError.vue'
 
 const props = defineProps({
     series: {
@@ -13,8 +14,20 @@ const props = defineProps({
 })
 const form = useForm({
     title: '',
-    series_id: ''
+    series_id: '',
+    resolutions: []
 })
+
+const addResolutions = () => {
+    form.resolutions.push({
+        resolution: '',
+        url: ''
+    });
+}
+
+const removeResolutons = (index) => {
+    form.resolutions.splice(index, 1);
+} 
 
 const submit = () => {
     form.post(route('episodes.store'))
@@ -55,13 +68,44 @@ const submit = () => {
                         <select :id="ids" class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                         ref="input"
                         v-model="form.series_id"
-                        
                         >
                             <template v-for="value in series">
                                 <option :value="value.id">{{ value.title }}</option>
                             </template>
                         </select>
                         <InputError class="mt-2" :message="form.errors.series_id" />
+                        <ButtonComponent 
+                                class="bg-accent hover:bg-slate-500 focus:ring-4 focus:ring-orange-200 block"
+                                children="add res"
+                                type="button"
+                                @click="addResolutions"
+                                />
+                        <template v-for="(resolution, index) in form.resolutions">
+                            <div class="flex justify-between items-center space-x-3 w-full">
+                                <div class="mb-6">
+                                    <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Resolutions</label>
+                                    <input type="text" id="default-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="720p"
+                                        v-model="resolution.resolution"
+                                        :aria-label="`resolution ${index +1 } resolution`"
+                                    >
+                                </div>
+                                <div class="mb-6 w-[75%]">
+                                    <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">url</label>
+                                    <input type="text" id="default-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="https://ia801400.us.archive.org/0/items/od-engksj2829nc/od-engksj2829nc-hd-11.mp4"
+                                        v-model="resolution.url"
+                                        :aria-label="`resolution ${index + 1} url`"
+                                    >
+                                </div>
+                                <ButtonComponent 
+                                    class="bg-red-400 hover:bg-red-500 focus:ring-4 focus:ring-red-300 h-fit"
+                                    children="del"
+                                    type="button"
+                                    @click="removeResolutons(index)"
+                                    />
+                            </div>
+                        </template>
                         <ButtonComponent 
                             class="bg-primaryBtn hover:bg-slate-800 focus:ring-4 focus:ring-slate-300"
                             children="Save"

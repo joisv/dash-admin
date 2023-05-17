@@ -21,7 +21,6 @@ const props = defineProps({
    
 })
 
-console.log(props.episodes.data);
 const flash = ref(true)
 const form = useForm({})
 const headers = (['number','title', 'actions'])
