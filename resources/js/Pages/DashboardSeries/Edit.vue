@@ -1,5 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
+import { ref, watchEffect } from 'vue'
 
 import AppLayout from '../../Layouts/AppLayout.vue';
 import InputForm from '../../Components/InputForm.vue';
@@ -18,22 +19,47 @@ const props = defineProps({
     },
 });
 const options = ['Movie', 'Tv']
+const isResolutions = ref(false)
 const status = ['ongoning', 'complete', 'pending']
 const form = useForm({
     title: props.series.title,
     original_title: props.series.original_title,
     type: props.series.type,
     score: props.series.score,
-    genres: props.series.genres,
+    resolutions: props.series.resolutions,
+    genres: props.series.genres.map(genre => genre.id),
     image: props.series.image,
     status: props.series.status,
-    synopsis: props.series.synopsis
+    synopsis: props.series.synopsis,
+    oldImg: props.series.image
 })
-const submit = () => {
-    form.put(route('series.update', props.series.id))
-}
 console.log(form.genres);
+console.log(props.series.genres);
+watchEffect(() => {
+    form.type === 'Movie' ? isResolutions.value = true : form.type === 'Tv' ? isResolutions.value = false : false
+})
+const removeResolutons = (index) => {
+    form.resolutions.splice(index, 1);
+} 
 
+const addResolutions = () => {
+    form.resolutions.push({
+        resolution: '',
+        url: ''
+    });
+}
+const submit = (id) => {
+    form.put(route('series.update', id))
+}
+function toggleGenre(genreId) {
+    if (form.genres.includes(genreId)) {
+      // Hapus genre dari array genres
+      form.genres = form.genres.filter(id => id !== genreId);
+    } else {
+      // Tambahkan genre ke array genres
+      form.genres.push(genreId);
+    }
+}
 </script>
 
 <template>
@@ -57,7 +83,7 @@ console.log(form.genres);
                             <h1 class="text-lg font-medium text-primaryBtn" v-if="form.title">{{ form.title }}</h1>
                         </div>
                     </div>
-                    <form @submit.prevent="submit">
+                    <form @submit.prevent="submit(series.id)">
                         <InputForm 
                             title="Title"
                             :required="true"
@@ -106,12 +132,51 @@ console.log(form.genres);
                             :values="status"
                             ids="status"
                         />
+                        <div v-if="isResolutions">
+                           <div class="flex space-x-2">
+                                <ButtonComponent 
+                                    class="bg-accent hover:bg-red-500 focus:ring-4 focus:ring-orange-200"
+                                    children="add"
+                                    type="button"
+                                    @click="addResolutions"
+                                    />
+                                <p class="text-red-400 text-sm font-medium">*required</p>
+                           </div>
+                            <template v-for="(resolution, index) in form.resolutions">
+                                <div class="flex justify-between items-center space-x-3 w-full">
+                                   
+                                    <div class="mb-6">
+                                        <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Resolutions</label>
+                                        <input type="text" id="default-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="720p"
+                                            v-model="resolution.resolution"
+                                            :aria-label="`resolution ${index +1 } resolution`"
+                                        >
+                                    </div>
+                                    <div class="mb-6 w-[75%]">
+                                        <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">url</label>
+                                        <input type="text" id="default-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="https://ia801400.us.archive.org/0/items/od-engksj2829nc/od-engksj2829nc-hd-11.mp4"
+                                            v-model="resolution.url"
+                                            :aria-label="`resolution ${index + 1} url`"
+                                        >
+                                    </div>
+                                    <ButtonComponent 
+                                        class="bg-red-400 hover:bg-red-500 focus:ring-4 focus:ring-red-300 h-fit"
+                                        children="del"
+                                        type="button"
+                                        @click="removeResolutons(index)"
+                                        />
+                                </div>
+                            </template>
+                        </div>
                         <div class="w-full h-28 overflow-auto mb-4 border-2 border-gray-200 rounded-md p-2 flex flex-wrap space-x-2">
                             <template v-for="( genre, index ) in genres" :key="genre.id">
                                 <div class="p-1 w-fit h-fit border-2 border-gray-400 rounded-md ">
                                      <input type="checkbox" :name="`genres${index+1}`" :id="`genres${index+1}`" class="opacity-50 absolute" 
                                      :value="genre.id" 
-                                     v-model="form.genres" >
+                                     :checked="form.genres.includes(genre.id)"
+                                     @change="toggleGenre(genre.id)" >
 
                                      <label :for="`genres${index+1}`" class="px-2 py-1 font-medium text-primaryBtn">{{ genre.names }}</label>
                                 </div>

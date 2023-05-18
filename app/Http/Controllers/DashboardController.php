@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Episodes;
 use App\Models\Genres;
 use App\Models\Series;
 use Illuminate\Http\Request;
@@ -55,23 +54,24 @@ class DashboardController extends Controller
             'synopsis' => 'string|max:255|nullable',
             'resolutions' => 'array'
         ]);
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imagePath = $image->store('public/series-images');
-            $data['image'] = basename($imagePath);
-        }
+        
         
         $series = new Series();
         $series->title = $data['title'];
         $series->original_title = $data['original_title'];
         $series->setSlugAttribute($data['title']);
         $series->type = $data['type'];
-        $series->image = $data['image'];
         $series->score = $data['score'];
         $series->status = $data['status'];
         $series->synopsis = $data['synopsis'];
         $series->save();
         $series->genres()->sync($data['genres']);
+        
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('public/series-images');
+            $series->image = basename($imagePath);
+        }
         
         if(isset($data['resolutions'])){
             foreach ($data['resolutions'] as $resolution ) {
@@ -101,7 +101,7 @@ class DashboardController extends Controller
     public function edit(Series $series)
     {
         return Inertia::render('DashboardSeries/Edit', [
-            'series' => $series->with('genres')->find($series->id),
+            'series' => $series->with(['genres', 'resolutions'])->find($series->id),
             'genres' => Genres::all()
         ]);
     }
@@ -109,9 +109,41 @@ class DashboardController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+       // dd($request['genres']);
+       $series = Series::find($id);
+       $series->title = $request['title'];
+       $series->original_title = $request['original_title'];
+       $series->setSlugAttribute($request['title']);
+       $series->type = $request['type'];
+       $series->score = $request['score'];
+       $series->status = $request['status'];
+       $series->synopsis = $request['synopsis'];
+       $series->save();
+       $series->genres()->sync($request['genres']);
+
+       if ($request->hasFile('image')) {
+           if($request->oldImg){
+               Storage::delete($request->oldImage);
+           }
+           $image = $request->file('image');
+           $imagePath = $image->store('public/series-images');
+           $series->image = basename($imagePath);
+       }
+       $series->resolutions()->delete();
+   
+       // Tambahkan resolusi baru
+       foreach ($request['resolutions'] as $resolution ) {
+           $resolutionData = [
+               'resolution' => $resolution['resolution'],
+               'url' => $resolution['url']
+           ];
+   
+           $series->resolutions()->create($resolutionData);
+       }
+   
+       return redirect()->route('series.index')->with('message', 'Post berhasil diperbarui');
     }
 
     /**
