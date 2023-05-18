@@ -3,7 +3,9 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EpisodesController;
 use App\Http\Controllers\GenresController;
+use App\Http\Controllers\TokenController;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -39,4 +41,10 @@ Route::middleware([
     Route::resource('/dashboard/series', DashboardController::class)->names('series');
     Route::resource('/dashboard/episodes', EpisodesController::class)->names('episodes');
     Route::resource('/dashboard/genres', GenresController::class)->names('genres');
+    Route::get('/dashboard/token', [TokenController::class, 'index'])->name('token');
+    
+    Route::post('/tokens/create', function (Request $request) {
+        $token = $request->user()->createToken($request->token_name);
+        return ['token' => $token->plainTextToken];
+    });
 });
