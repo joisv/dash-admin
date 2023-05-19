@@ -41,10 +41,7 @@ Route::middleware([
     Route::resource('/dashboard/series', DashboardController::class)->names('series');
     Route::resource('/dashboard/episodes', EpisodesController::class)->names('episodes');
     Route::resource('/dashboard/genres', GenresController::class)->names('genres');
-    Route::get('/dashboard/token', [TokenController::class, 'index'])->name('token');
+    Route::get('/api-token', [TokenController::class, 'index'])->name('token');
     
-    Route::post('/tokens/create', function (Request $request) {
-        $token = $request->user()->createToken($request->token_name);
-        return ['token' => $token->plainTextToken];
-    });
+    Route::post('/api-token/create', [TokenController::class, 'gettoken'])->name('gettoken');
 });
