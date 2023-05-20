@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashController;
 use App\Http\Controllers\EpisodesController;
 use App\Http\Controllers\GenresController;
 use App\Http\Controllers\TokenController;
@@ -34,10 +35,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-
+    Route::get('/dashboard', [DashController::class, 'index'])->name('dashboard');
     Route::resource('/dashboard/series', DashboardController::class)->names('series');
     Route::resource('/dashboard/episodes', EpisodesController::class)->names('episodes');
     Route::resource('/dashboard/genres', GenresController::class)->names('genres');

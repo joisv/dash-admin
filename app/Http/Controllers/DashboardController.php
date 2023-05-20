@@ -15,8 +15,6 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        // $series = Series::orderBy('created_at', 'desc')->get();
-        // dd($series);
         return Inertia::render('DashboardSeries/Index', [
             'series' => Series::query()
                         ->when($request->input('search'),function($query, $search) {
@@ -117,7 +115,6 @@ class DashboardController extends Controller
      */
     public function update(Request $request, $id)
     {
-       // dd($request['genres']);
        $series = Series::find($id);
        $series->title = $request['title'];
        $series->original_title = $request['original_title'];
