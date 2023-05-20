@@ -20,10 +20,10 @@ const props = defineProps({
     },
    
 })
-
+console.log(props.episodes);
 const flash = ref(true)
 const form = useForm({})
-const headers = (['number','title', 'actions'])
+const headers = (['number','title', 'series', 'actions'])
 let search = ref(props.filters.search);
 
 
@@ -89,9 +89,12 @@ function edit(id) {
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ index + 1 }}
                                     </th>
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ item.title }}
-                                    </th>
+                                    </td>
+                                    <td scope="row" class="px-6 py-4 ">
+                                        {{ item.series.title }}
+                                    </td>
                                     <td class="px-6 py-4 flex space-x-2">
                                     <ButtonComponent 
                                             class="bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300"

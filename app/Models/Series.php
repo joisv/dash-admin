@@ -39,5 +39,10 @@ class Series extends Model
     public function resolutions() {
         return $this->hasMany(Resolutions::class);
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }
 

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->enum('type', ['Movie', 'Tv']);
             $table->string('score');
             $table->string('status');
+            $table->integer('year')->nullable();
+            $table->string('season')->nullable();
             $table->longText('synopsis')->nullable();
             $table->timestamp('published_at')->nullable();
             $table->string('image')->nullable();

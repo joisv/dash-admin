@@ -20,7 +20,6 @@ const props = defineProps({
     },
    
 })
-
 const flash = ref(true)
 const form = useForm({})
 const headers = (['number','title', 'actions'])

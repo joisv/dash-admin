@@ -18,8 +18,10 @@ const props = defineProps({
         default: () => ({})
     },
 });
+console.log(props.series);
 const options = ['Movie', 'Tv']
 const isResolutions = ref(false)
+const season = ['Winter', 'Summer', 'Fall', 'Spring']
 const status = ['ongoning', 'complete', 'pending']
 const form = useForm({
     title: props.series.title,
@@ -27,14 +29,14 @@ const form = useForm({
     type: props.series.type,
     score: props.series.score,
     resolutions: props.series.resolutions,
+    season: props.series.season,
+    year: props.series.year,
     genres: props.series.genres.map(genre => genre.id),
     image: props.series.image,
     status: props.series.status,
     synopsis: props.series.synopsis,
     oldImg: props.series.image
 })
-console.log(form.genres);
-console.log(props.series.genres);
 watchEffect(() => {
     form.type === 'Movie' ? isResolutions.value = true : form.type === 'Tv' ? isResolutions.value = false : false
 })
@@ -115,12 +117,31 @@ function toggleGenre(genreId) {
                                     title="Types"
                                     ids="type"
                                 />
-                                <InputForm 
-                                    title="Score"
-                                    :required="true"
-                                    type="text"
-                                    v-model="form.score"
-                                />
+                                <div class="flex justify-between space-x-2">
+                                    <InputForm 
+                                        title="Score"
+                                        :required="false"
+                                        type="text"
+                                        v-model="form.score"
+                                    />
+                                    <InputError class="mt-2" :message="form.errors.score" />
+                                    <InputForm 
+                                        title="Year"
+                                        :required="false"
+                                        type="text"
+                                        v-model="form.year"
+                                    />
+                                    <InputError class="mt-2" :message="form.errors.year" />
+                                   <div>
+                                        <SelectInput 
+                                            v-model="form.season"
+                                            :values="season"
+                                            title="Seaseon"
+                                            ids="season"
+                                        />
+                                        <InputError class="mt-2" :message="form.errors.season" />
+                                   </div>
+                                </div>
                             </div>
                            
                         </div>

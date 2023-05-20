@@ -18,7 +18,7 @@ class EpisodesController extends Controller
             'episodes' => Episodes::query()
                         ->when($request->input('search'),function($query, $search) {
                             $query->where('title','like','%'.$search.'%');
-                        })->orderBy('created_at', 'desc')->paginate(10)->withQueryString(),
+                        })->orderBy('created_at', 'desc')->with('series')->paginate(10)->withQueryString(),
             'filters' => $request->only(['search'])
         ]);
     }

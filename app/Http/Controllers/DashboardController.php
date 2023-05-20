@@ -43,6 +43,7 @@ class DashboardController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         $data = $request->validate([
             'title' => 'required|max:100|string',
             'original_title' => 'max:100|string|nullable',
@@ -50,9 +51,11 @@ class DashboardController extends Controller
             'image' => '|file|max:2048',
             'genres' => 'required',
             'score' => 'required|string',
-            'status' => 'nullable|string',
+            'status' => 'required|string',
+            'season' => 'string',
+            'year' => 'integer',
             'synopsis' => 'string|max:255|nullable',
-            'resolutions' => 'array'
+            'resolutions' => 'array',
         ]);
         
         
@@ -63,6 +66,8 @@ class DashboardController extends Controller
         $series->type = $data['type'];
         $series->score = $data['score'];
         $series->status = $data['status'];
+        $series->season = $data['season'];
+        $series->year = $data['year'];
         $series->synopsis = $data['synopsis'];
         $series->save();
         $series->genres()->sync($data['genres']);
@@ -98,8 +103,9 @@ class DashboardController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Series $series)
+    public function edit(string $id)
     {
+       $series = Series::findOrFail($id);
         return Inertia::render('DashboardSeries/Edit', [
             'series' => $series->with(['genres', 'resolutions'])->find($series->id),
             'genres' => Genres::all()
@@ -119,7 +125,8 @@ class DashboardController extends Controller
        $series->type = $request['type'];
        $series->score = $request['score'];
        $series->status = $request['status'];
-       $series->synopsis = $request['synopsis'];
+       $series->season = $request['season'];
+       $series->year = $request['year'];
        $series->save();
        $series->genres()->sync($request['genres']);
 

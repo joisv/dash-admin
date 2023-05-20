@@ -217,6 +217,26 @@ const logout = () => {
                             Dashboard
                         </ResponsiveNavLink>
                     </div>
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('series.index')" :active="route().current('series.index')">
+                            Series
+                        </ResponsiveNavLink>
+                    </div>
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('episodes.index')" :active="route().current('episodes.index')">
+                            Episode
+                        </ResponsiveNavLink>
+                    </div>
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('genres.index')" :active="route().current('genres.index')">
+                            Genre
+                        </ResponsiveNavLink>
+                    </div>
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('token')" :active="route().current('token')">
+                            Token
+                        </ResponsiveNavLink>
+                    </div>
 
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200">
