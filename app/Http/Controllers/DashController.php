@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Episodes;
 use App\Models\Series;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -16,30 +17,29 @@ class DashController extends Controller
 
         $dates = [];
         $viewsData = [];
-
-        // Loop melalui setiap hari dalam rentang tanggal
         for ($date = $sixDaysAgo; $date <= $today; $date->addDay()) {
             $startOfDay = $date->copy()->startOfDay();
             $endOfDay = $date->copy()->endOfDay();
-
-            // Mengambil jumlah views pada rentang 24 jam di hari tersebut
             $views = Series::whereBetween('created_at', [$startOfDay, $endOfDay])
                 ->sum('views');
-
-            $dates[] = $date->format('l'); // Menyimpan hari dalam format 'hari'
-            $viewsData[] = $views; // Menyimpan jumlah views
+            $dates[] = $date->format('l');
+            $viewsData[] = $views;
         }
 
+        $totalViewsSeries = Series::sum('views');
+        $totalViewsEpisodes = Episodes::sum('views');
         $new = Series::orderBy('created_at', 'desc')->take(5)->get();
         $statusCount = Series::whereIn('status', ['complete', 'ongoing', 'pending'])
                 ->select('status', DB::raw('COUNT(*) as count'))
                 ->groupBy('status')
                 ->get();
-
+        
         return Inertia::render('Dashboard', [
             'dates' => $dates,
             'views' => $viewsData,
             'new' => $new,
+            'totalViews' => $totalViewsSeries,
+            'totalViewsEps' => $totalViewsEpisodes,
             'status' => $statusCount
         ]);
     }

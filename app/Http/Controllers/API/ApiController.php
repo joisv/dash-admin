@@ -36,6 +36,9 @@ class ApiController extends Controller
     public function show(Series $series) {
         try {
             $series->increment('views');
+            foreach ($series->episodes as $episode) {
+                $episode->increment('views');
+            }
             $data = $series->load( 'genres', 'episodes', 'resolutions');
             return response()->json(['data' => $data], 200);
 

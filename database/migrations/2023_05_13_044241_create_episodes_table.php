@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->foreignId('series_id');
+            $table->integer('views')->default(0);
             $table->string('slug')->unique();
             $table->timestamps();
         });

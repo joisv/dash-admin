@@ -5,11 +5,32 @@ import ChartStatus from '../Components/ChartStatus.vue'
 import Datatables from '../Components/Datatables.vue'
 
 const props = defineProps({
-    dates: Array,
-    views: Array,
-    new: Array,
-    status: Array
+    dates: {
+        type: Array,
+        default: () => ({})
+    },
+    views: {
+        type: Array,
+        default: () => ({})
+    },
+    new: {
+        type: Array,
+        default: () => ({})
+    },
+    status: {
+        type: Array,
+        default: () => ({})
+    },
+    totalViews: {
+        type: String,
+        default: () => ({})
+    },
+    totalViewsEps: {
+        type: Array,
+        default: () => ({})
+    }
 })
+console.log(props.totalViews);
 const headers = ['number','title', 'views']
 </script>
 
@@ -23,7 +44,20 @@ const headers = ['number','title', 'views']
 
         <div>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-secondaryBtn overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="bg-secondaryBtn overflow-hidden shadow-xl sm:rounded-lg p-3">
+                    <div class="flex mb-10">
+                        <div class="flex space-x-5">
+                            <!-- total views -->
+                            <div class="bg-primaryBtn rounded-md p-4 flex flex-col justify-center">
+                                <p class="text-secondaryBtn font-medium text-center text-lg">{{ totalViews }}</p>
+                                <h2 class="text-secondaryBtn text-sm font-medium">Total Views Series</h2>
+                            </div>
+                            <div class="bg-primaryBtn rounded-md p-4 flex flex-col justify-center">
+                                <p class="text-secondaryBtn font-medium text-center text-lg">{{ totalViewsEps }}</p>
+                                <h2 class="text-secondaryBtn text-sm font-medium">Total Views Episode</h2>
+                            </div>
+                        </div>
+                    </div>
                     <ChartViews :dates="props.dates" :views="props.views"/>
                     <div class="sm:flex mt-10">
                         <!-- new post -->
