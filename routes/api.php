@@ -23,6 +23,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function (){
     Route::get('/popular', [ApiController::class, 'popular']);
     Route::get('/new', [ApiController::class, 'new']);
     Route::get('/show/{series:slug}', [ApiController::class, 'show']);
+    Route::get('/showeps/{episodes:id}', [ApiController::class, 'showeps']);
     Route::get('/genres', [ApiController::class, 'genres']);
     Route::get('/genres/q/{genres:id}', [ApiController::class, 'genresQ']);
 });

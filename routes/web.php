@@ -40,4 +40,5 @@ Route::middleware([
     Route::resource('/dashboard/episodes', EpisodesController::class)->names('episodes');
     Route::resource('/dashboard/genres', GenresController::class)->names('genres');
     Route::get('/api-token', [TokenController::class, 'index'])->name('token');
+    Route::post('/api-token/create', [TokenController::class, 'gettoken'])->name('gettoken');
 });

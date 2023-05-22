@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Episodes;
 use App\Models\Genres;
 use App\Models\Series;
 use Illuminate\Http\Request;
@@ -36,10 +37,17 @@ class ApiController extends Controller
     public function show(Series $series) {
         try {
             $series->increment('views');
-            foreach ($series->episodes as $episode) {
-                $episode->increment('views');
-            }
             $data = $series->load( 'genres', 'episodes', 'resolutions');
+            return response()->json(['data' => $data], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'not found'], 404);
+        }
+    }
+    public function showEps(Episodes $episodes) {
+        try {
+            $episodes->increment('views');
+            $data = $episodes->load('resolutions');
             return response()->json(['data' => $data], 200);
 
         } catch (\Throwable $th) {
