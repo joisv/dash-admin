@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('original_title')->nullable();
             $table->string('slug')->unique();
             $table->enum('type', ['Movie', 'Tv']);
-            $table->string('score');
+            $table->integer('score');
             $table->string('status');
             $table->integer('year')->nullable();
             $table->string('season')->nullable();

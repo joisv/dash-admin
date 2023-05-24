@@ -52,7 +52,8 @@ class EpisodesController extends Controller
        foreach ($data['resolutions'] as $resolution ) {
         $resolutionData = [
             'resolution' => $resolution['resolution'],
-            'url' => $resolution['url']
+            'url' => $resolution['url'],
+            'download_url' => $resolution['download_url']
         ];
     
         $episodes->resolutions()->create($resolutionData);
@@ -104,7 +105,8 @@ class EpisodesController extends Controller
         foreach ($data['resolutions'] as $resolution ) {
             $resolutionData = [
                 'resolution' => $resolution['resolution'],
-                'url' => $resolution['url']
+                'url' => $resolution['url'],
+                'download_url' => $resolution['download_url']
             ];
     
             $episode->resolutions()->create($resolutionData);

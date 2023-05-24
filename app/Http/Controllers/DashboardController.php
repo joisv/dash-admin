@@ -41,18 +41,17 @@ class DashboardController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
         $data = $request->validate([
             'title' => 'required|max:100|string',
             'original_title' => 'max:100|string|nullable',
             'type' => 'required|string',
-            'image' => '|file|max:2048',
+            'image' => $request->hasFile('image') ? 'file|2048' : 'required|url',
             'genres' => 'required',
-            'score' => 'required|string',
+            'score' => 'required',
             'status' => 'required|string',
             'season' => 'string',
             'year' => 'integer',
-            'synopsis' => 'string|max:255|nullable',
+            'synopsis' => 'string|max:2024|nullable',
             'resolutions' => 'array',
         ]);
         
@@ -80,7 +79,8 @@ class DashboardController extends Controller
             foreach ($data['resolutions'] as $resolution ) {
                 $resolutionData = [
                     'resolution' => $resolution['resolution'],
-                    'url' => $resolution['url']
+                    'url' => $resolution['url'],
+                    'download_url' => $resolution['download_url']
                 ];
             
                 $series->resolutions()->create($resolutionData);
@@ -141,7 +141,8 @@ class DashboardController extends Controller
        foreach ($request['resolutions'] as $resolution ) {
            $resolutionData = [
                'resolution' => $resolution['resolution'],
-               'url' => $resolution['url']
+               'url' => $resolution['url'],
+               'download_url' => $resolution['download_url']
            ];
    
            $series->resolutions()->create($resolutionData);

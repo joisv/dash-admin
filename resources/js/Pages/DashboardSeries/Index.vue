@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useForm} from '@inertiajs/vue3';
+import axios from 'axios';
 
 import SearchInput from '../../Components/SearchInput.vue';
 import AppLayout from '../../Layouts/AppLayout.vue';
@@ -8,6 +9,7 @@ import DataTables from '../../Components/Datatables.vue';
 import ButtonComponent from '../../Components/ButtonComponent.vue';
 import Pagination from '../../Components/Pagination.vue';
 import WarningSvg from '../../Components/WarningSvg.vue';
+import InputForm from '../../Components/InputForm.vue'
 
 const props = defineProps({ 
     series: {
@@ -29,6 +31,8 @@ const status = {
 }
 const flash = ref(true)
 const form = useForm({})
+// const result = ref('')
+// const generate = ref('')
 let search = ref(props.filters.search);
 
 watch(search, (value)=> {
@@ -44,9 +48,36 @@ watch(search, (value)=> {
 const submit = () => {
     form.get(route('series.create'))
 }
+
+
 function handleFlash() {
     flash.value = false
 }
+// const handleGenerate = async (id) => {
+//     try {
+//         const response = await axios.get(`/anime/full/${id}`);
+//         result.value = response.data.data;
+
+//         const gen = useForm({
+//         title: result.title,
+//         original_title: result.title_japanese,
+//         type: 'Tv',
+//         score: result.score,
+//         genres: [1],
+//         image: result.images.jpg.large_image_url,
+//         status: 'ongoing',
+//         season: result.season,
+//         year: result.year,
+//         synopsis: 'halo dunia',
+//         resolutions: []
+//         });
+
+//         console.log(result.value);
+//         gen.post(route('gen'));
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
 
 function destroy(id) {
     if(confirm('are you sure?')){
@@ -63,9 +94,25 @@ function edit(id) {
 <template>
     <AppLayout title="Dashboard">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight selected">
-                Series
-            </h2>
+            <div class="flex justify-between">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight selected">
+                    Series
+                </h2>
+                <!-- <div>
+                    <InputForm 
+                        :required="false"
+                        type="text"
+                        v-model="generate"
+                        
+                    />
+                    <ButtonComponent 
+                        class="bg-primaryBtn hover:bg-slate-800 focus:ring-4 focus:ring-slate-300 h-fit"
+                        children="generate"
+                        type="submit"
+                        @click="handleGenerate(generate)"
+                    />
+                </div> -->
+            </div>
             <div class="max-w-7xl relative z-40">
                 <button @click="handleFlash" class="absolute right-20" v-if="flash">
                     <div v-if="$page.props.flash.message" class="bg-secondaryBtn border-2 border-blue-300 rounded-md p-4 bg-opacity-90 text-gray-700 flex items-center space-x-4">

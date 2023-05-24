@@ -17,6 +17,10 @@ const props = defineProps({
 })
 const imagePreview = ref(null)
 const isResolutions = ref(false)
+const result = ref({})
+const isGenerate = ref(false)
+const isError = ref(false)
+const isDownload = ref(false)
 const options = ['Movie', 'Tv']
 const status = ['ongoing', 'complete', 'pending']
 const season = ['Winter', 'Summer', 'Fall', 'Spring']
@@ -41,7 +45,8 @@ watchEffect(() => {
 const addResolutions = () => {
     form.resolutions.push({
         resolution: '',
-        url: ''
+        url: '',
+        download_url: ''
     });
 }
 
@@ -51,6 +56,7 @@ const removeResolutons = (index) => {
 
 const handleImage = (event) => {
     form.image = event.target.files[0];
+    console.log(form.image);
     if (form.image) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -65,6 +71,28 @@ const handleImage = (event) => {
 const submit = () => {
     form.post(route('series.store'))
 }
+
+const handleGenerate = async (id) => {
+    isGenerate.value = true
+    try {
+        const response = await axios.get(`/anime/full/${id}`);
+        result.value = response.data.data;
+        form.title = result.value.title
+        form.original_title = result.value.title_japanese
+        form.image = result.value.images.jpg.large_image_url
+        imagePreview.value = result.value.images.jpg.large_image_url
+        form.score = result.value.score
+        form.season = result.value.season
+        form.year = result.value.year
+        form.synopsis = result.value.synopsis
+        isGenerate.value = false
+        isError.value = false
+        console.log(result.value.synopsis);
+    } catch (error) {
+        isGenerate.value = false
+        isError.value = true
+    }
+};
 </script>
 
 <template>
@@ -79,14 +107,33 @@ const submit = () => {
             </div>
         </template>
             <div class="max-w-3xl mx-auto sm:px-6 lg:px-8 px-2">
-                <div class="bg-secondaryBtn overflow-hidden shadow-xl sm:rounded-lg md:p-10 p-2">
-                    <div class="mb-4 flex items-center space-x-4">
-                        <img class="rounded-full  h-14 w-14 sm:h-16 sm:w-16" src="https://flowbite.com/docs/images/examples/image-4@2x.jpg" v-if="!imagePreview">
-                        <img :src="imagePreview" v-if="imagePreview" class="rounded-full h-16 w-16 sm:h-16 sm:w-16 object-cover object-top">
-                        <div>
-                            <h1 class="text-lg font-medium text-primaryBtn" v-if="!form.title">Youre title here...</h1>
-                            <h1 class="text-lg font-medium text-primaryBtn" v-if="form.title">{{ form.title }}</h1>
+                <div class="bg-secondaryBtn overflow-hidden shadow-xl sm:rounded-lg md:p-10 p-2" :class="isGenerate ? 'bg-opacity-50' : null ">
+                    <div class="mb-4 flex items-center justify-between">
+                        <div class="flex space-x-3 items-center">
+                            <img class="rounded-full  h-14 w-14 sm:h-16 sm:w-16" src="https://flowbite.com/docs/images/examples/image-4@2x.jpg" v-if="!imagePreview">
+                            <img :src="imagePreview" v-if="imagePreview" class="rounded-full h-16 w-16 sm:h-16 sm:w-16 object-cover object-top">
+                            <div>
+                                <h1 class="text-lg font-medium text-primaryBtn" v-if="!form.title">Youre title here...</h1>
+                                <h1 class="text-lg font-medium text-primaryBtn" v-if="form.title">{{ form.title }}</h1>
+                            </div>
                         </div>
+                        <div>
+                            <div class="bg-red-300 p-2 rounded-sm text-medium" v-if="isError">
+                                <h1>something went wrong</h1>
+                            </div>
+                        <InputForm 
+                            :required="false"
+                            type="text"
+                            v-model="generate"
+                            
+                        />
+                        <ButtonComponent 
+                            class="bg-primaryBtn hover:bg-slate-800 focus:ring-4 focus:ring-slate-300 h-fit"
+                            children="generate"
+                            type="submit"
+                            @click="handleGenerate(generate)"
+                        />
+                </div>
                     </div>
                     <form @submit.prevent="submit">
                         <InputForm 
@@ -141,7 +188,7 @@ const submit = () => {
                                         <SelectInput 
                                             v-model="form.season"
                                             :values="season"
-                                            title="Seaseon"
+                                            title="Season"
                                             ids="season"
                                         />
                                         <InputError class="mt-2" :message="form.errors.season" />
@@ -162,7 +209,7 @@ const submit = () => {
                            <div class="flex space-x-2">
                                 <ButtonComponent 
                                     class="bg-accent hover:bg-red-500 focus:ring-4 focus:ring-orange-200"
-                                    children="add"
+                                    children="add resolution"
                                     type="button"
                                     @click="addResolutions"
                                     />
@@ -185,17 +232,27 @@ const submit = () => {
                                         >
                                     </div>
                                     <div class="mb-6 w-[75%]">
-                                        <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">url</label>
+                                        <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">stream url</label>
                                         <input type="text" id="default-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="required"
                                             v-model="resolution.url"
                                             :aria-label="`resolution ${index + 1} url`"
                                         >
                                     </div>
+                                    <div class="mb-6 w-[75%]">
+                                        <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">download url</label>
+                                        <input type="text" id="default-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="nullable"
+                                            v-model="resolution.download_url"
+                                            :aria-label="`download_url ${index + 1} url`"
+                                        >
+                                    </div>
                                 </div>
                             </template>
                             
                         </div>
+                        <!-- download -->
+                       
                         <div class="w-full h-28 overflow-auto mb-4 border-2 border-gray-200 rounded-md p-2 flex flex-wrap space-x-2">
                             <template v-for="( genre, index ) in props.genres" :key="genre.id">
                                 <div class="p-1 w-fit h-fit border-2 border-gray-400 rounded-md " :class="{'border-2 border-red-400' : form.errors.genres}">
@@ -207,6 +264,7 @@ const submit = () => {
                         <div class="w-full mb-4 border border-gray-300 rounded-lg bg-gray-100 dark:bg-gray-700 dark:border-gray-600">
                             <div class="px-4 py-2 bg-secondaryBtn rounded-t-lg dark:bg-gray-800">
                                 <textarea id="synopsis" rows="4" class="w-full px-0 text-sm text-gray-900 bg-secondaryBtn border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write a synopsis..." v-model="form.synopsis"></textarea>
+                                <InputError class="mt-2" :message="form.errors.synopsis" />
                             </div>
                         </div>
                         <ButtonComponent 

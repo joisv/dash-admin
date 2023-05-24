@@ -95,7 +95,7 @@ const setActiveTabV = ( tab ) => {
                                 <ChartViews :dates="props.dateseps" :views="props.viewseps"/>
                             </div>
                         </div>
-                        <div>
+                        <div class="mt-5 md:mt-0">
                             <h1 class="font-semibold">Oder by popular</h1>
                             <Tab :tabs="tabsV" :setActiveTab="setActiveTabV" :activeTab="activeTabV" />
                             <div v-if="activeTabV === 'series' ">

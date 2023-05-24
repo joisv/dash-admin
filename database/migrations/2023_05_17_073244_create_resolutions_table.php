@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('series_id')->nullable();
             $table->string('resolution');
             $table->string('url');
+            $table->string('download_url')->nullable();
             $table->timestamps();
 
             $table->foreign('episodes_id')->references('id')->on('episodes')->onDelete('cascade');
