@@ -84,7 +84,7 @@ const setActiveTabV = ( tab ) => {
                             </div>
                         </div>
                     </div>
-                    <div class="md:flex ">
+                    <div class="md:flex sm:justify-between">
                         
                         <div class="md:w-[60%] w-full">
                             <Tab :tabs="tabs" :setActiveTab="setActiveTab" :activeTab="activeTab"/>
@@ -95,7 +95,7 @@ const setActiveTabV = ( tab ) => {
                                 <ChartViews :dates="props.dateseps" :views="props.viewseps"/>
                             </div>
                         </div>
-                        <div class="mt-5 md:mt-0">
+                        <div class="mt-5 md:mt-0 sm:w-[38%]">
                             <h1 class="font-semibold">Oder by popular</h1>
                             <Tab :tabs="tabsV" :setActiveTab="setActiveTabV" :activeTab="activeTabV" />
                             <div v-if="activeTabV === 'series' ">

@@ -18,7 +18,6 @@ const props = defineProps({
         default: () => ({})
     },
 });
-console.log(props.series);
 const options = ['Movie', 'Tv']
 const isResolutions = ref(false)
 const season = ['Winter', 'Summer', 'Fall', 'Spring']

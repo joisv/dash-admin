@@ -31,8 +31,6 @@ const status = {
 }
 const flash = ref(true)
 const form = useForm({})
-// const result = ref('')
-// const generate = ref('')
 let search = ref(props.filters.search);
 
 watch(search, (value)=> {
@@ -53,31 +51,6 @@ const submit = () => {
 function handleFlash() {
     flash.value = false
 }
-// const handleGenerate = async (id) => {
-//     try {
-//         const response = await axios.get(`/anime/full/${id}`);
-//         result.value = response.data.data;
-
-//         const gen = useForm({
-//         title: result.title,
-//         original_title: result.title_japanese,
-//         type: 'Tv',
-//         score: result.score,
-//         genres: [1],
-//         image: result.images.jpg.large_image_url,
-//         status: 'ongoing',
-//         season: result.season,
-//         year: result.year,
-//         synopsis: 'halo dunia',
-//         resolutions: []
-//         });
-
-//         console.log(result.value);
-//         gen.post(route('gen'));
-//     } catch (error) {
-//         console.log(error);
-//     }
-// };
 
 function destroy(id) {
     if(confirm('are you sure?')){
@@ -98,20 +71,6 @@ function edit(id) {
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight selected">
                     Series
                 </h2>
-                <!-- <div>
-                    <InputForm 
-                        :required="false"
-                        type="text"
-                        v-model="generate"
-                        
-                    />
-                    <ButtonComponent 
-                        class="bg-primaryBtn hover:bg-slate-800 focus:ring-4 focus:ring-slate-300 h-fit"
-                        children="generate"
-                        type="submit"
-                        @click="handleGenerate(generate)"
-                    />
-                </div> -->
             </div>
             <div class="max-w-7xl relative z-40">
                 <button @click="handleFlash" class="absolute right-20" v-if="flash">

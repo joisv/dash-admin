@@ -20,7 +20,6 @@ const isResolutions = ref(false)
 const result = ref({})
 const isGenerate = ref(false)
 const isError = ref(false)
-const isDownload = ref(false)
 const options = ['Movie', 'Tv']
 const status = ['ongoing', 'complete', 'pending']
 const season = ['Winter', 'Summer', 'Fall', 'Spring']
@@ -56,7 +55,6 @@ const removeResolutons = (index) => {
 
 const handleImage = (event) => {
     form.image = event.target.files[0];
-    console.log(form.image);
     if (form.image) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -87,7 +85,6 @@ const handleGenerate = async (id) => {
         form.synopsis = result.value.synopsis
         isGenerate.value = false
         isError.value = false
-        console.log(result.value.synopsis);
     } catch (error) {
         isGenerate.value = false
         isError.value = true

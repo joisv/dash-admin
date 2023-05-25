@@ -12,7 +12,6 @@ const props = defineProps({
         default: () => ({})
     },
 })
-console.log(props.genre.id);
 const form = useForm({
     names: props.genre.names,
 })

@@ -7,7 +7,7 @@ import Pagination from '../../Components/Pagination.vue';
 import WarningSvg from '../../Components/WarningSvg.vue';
 import ButtonComponent from '../../Components/ButtonComponent.vue';
 import SearchInput from '../../Components/SearchInput.vue';
-import DataTables from '../../Components/DataTables.vue';
+import DataTables from '../../Components/Datatables.vue';
 
 const props = defineProps({
     episodes: {
@@ -20,7 +20,6 @@ const props = defineProps({
     },
    
 })
-console.log(props.episodes);
 const flash = ref(true)
 const form = useForm({})
 const headers = (['number','title', 'series', 'actions'])
