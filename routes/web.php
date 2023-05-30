@@ -7,7 +7,6 @@ use App\Http\Controllers\GenresController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TokenController;
 use Illuminate\Foundation\Application;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;

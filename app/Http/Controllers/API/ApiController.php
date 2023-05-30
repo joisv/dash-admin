@@ -22,6 +22,18 @@ class ApiController extends Controller
             return response()->json(['error' => 'Something went wrong'], 500);
         }
     }
+    public function top() {
+        try {
+
+            $series = Series::orderBy('views', 'desc')
+                        ->paginate(8)->withQueryString();
+
+            return response()->json(['data' => $series], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
+    }
     public function new() {
         try {
 

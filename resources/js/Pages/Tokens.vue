@@ -12,7 +12,6 @@ const props = defineProps({
         type: Array,
         default: () => ({})
     },
-   
 });
 const form = useForm({
     token_name: ''
@@ -36,6 +35,7 @@ const submit = () => {
                     <h2 class="font-semibold text-xl text-gray-800 leading-tight selected ">
                        Generate token
                     </h2>
+                    <h1>{{ token }}</h1>
                 </div>
             </div>
         </template>
