@@ -69,12 +69,13 @@ const handleImage = (event) => {
 const submit = () => {
     form.post(route('series.store'))
 }
-
+const err = ref('')
+const generate = ref(null)
 const handleGenerate = async (id) => {
     isGenerate.value = true
     try {
-        const response = await axios.get(`/anime/full/${id}`);
-        result.value = response.data.data;
+        const response = await axios.get(`/api/v1/anime/full/${id}`);
+        result.value = response.data.data.data;
         form.title = result.value.title
         form.original_title = result.value.title_japanese
         form.image = result.value.images.jpg.large_image_url
@@ -83,9 +84,11 @@ const handleGenerate = async (id) => {
         form.season = result.value.season
         form.year = result.value.year
         form.synopsis = result.value.synopsis
+        console.log(result.value);
         isGenerate.value = false
         isError.value = false
     } catch (error) {
+        err.value = error
         isGenerate.value = false
         isError.value = true
     }
@@ -116,7 +119,7 @@ const handleGenerate = async (id) => {
                         </div>
                         <div>
                             <div class="bg-red-300 p-2 rounded-sm text-medium" v-if="isError">
-                                <h1>something went wrong</h1>
+                                <h1>{{ err }}</h1>
                             </div>
                         <InputForm 
                             :required="false"

@@ -35,6 +35,23 @@ watch(search, (value)=> {
         }
     ))
 })
+const isGenerate = ref(false)
+const isError = ref(false)
+const result = ref({})
+
+const handleGenerate = async () => {
+    isGenerate.value = true
+    try {
+        const response = await axios.get(`/genres/anime`);
+        result.value = response.data.data;
+       
+        isGenerate.value = false
+        isError.value = false
+    } catch (error) {
+        isGenerate.value = false
+        isError.value = true
+    }
+};
 
 const submit = () => {
     form.get(route('genres.create'))
@@ -58,6 +75,17 @@ function edit(id) {
             <h2 class="font-semibold text-xl text-gray-800 leading-tight selected">
                 Episodes
             </h2>
+            <div>
+                <div class="bg-red-300 p-2 rounded-sm text-medium" v-if="isError">
+                    <h1>something went wrong</h1>
+                </div>
+                <ButtonComponent 
+                    class="bg-primaryBtn hover:bg-slate-800 focus:ring-4 focus:ring-slate-300 h-fit"
+                    children="generate"
+                    type="submit"
+                    @click="handleGenerate()"
+                />
+            </div>
             <div class="max-w-7xl relative z-40">
                 <button @click="handleFlash" class="absolute right-20" v-if="flash">
                     <div v-if="$page.props.flash.message" class="bg-secondaryBtn border-2 border-blue-300 rounded-md p-4 bg-opacity-90 text-gray-700 flex items-center space-x-4">

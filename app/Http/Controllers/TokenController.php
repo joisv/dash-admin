@@ -14,6 +14,6 @@ class TokenController extends Controller
 
    public function gettoken(Request $request){
       $token = $request->user()->createToken($request->token_name);
-      return response()->json(['token' => $token->plainTextToken]);
+      return ['token' => $token->plainTextToken];
    }
 }
