@@ -201,7 +201,7 @@ function toggleGenre(genreId) {
                         </div>
                         <div class="w-full h-28 overflow-auto mb-4 border-2 border-gray-200 rounded-md p-2 flex flex-wrap space-x-2">
                             <template v-for="( genre, index ) in genres" :key="genre.id">
-                                <div class="p-1 w-fit h-fit border-2 border-gray-400 rounded-md ">
+                                <div class="p-1 w-fit h-fit relative border-2 border-gray-400 rounded-md ">
                                      <input type="checkbox" :name="`genres${index+1}`" :id="`genres${index+1}`" class="opacity-50 absolute" 
                                      :value="genre.id" 
                                      :checked="form.genres.includes(genre.id)"

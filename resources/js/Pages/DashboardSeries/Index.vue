@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import SearchInput from '../../Components/SearchInput.vue';
 import AppLayout from '../../Layouts/AppLayout.vue';
-import DataTables from '../../Components/Datatables.vue';
+import DataTables from '../../Components/DataTables.vue';
 import ButtonComponent from '../../Components/ButtonComponent.vue';
 import Pagination from '../../Components/Pagination.vue';
 import WarningSvg from '../../Components/WarningSvg.vue';

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Genres;
 use App\Models\Series;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;

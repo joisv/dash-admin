@@ -27,31 +27,48 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function (){
     Route::get('/anime/full/{id}', function ($id) {
         try {
             $url = "https://api.jikan.moe/v4/anime/" . $id;
-        
-            // Inisialisasi sesi cURL
+    
             $ch = curl_init();
             
-            // Set URL yang akan dituju
             curl_setopt($ch, CURLOPT_URL, $url);
             
-            // Aktifkan opsi untuk mengembalikan respons sebagai string
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             
-            // Eksekusi permintaan cURL
             $response = curl_exec($ch);
             $response = json_decode($response, true); 
             
-            // Periksa apakah permintaan berhasil
             if ($response === false) {
                 $error = curl_error($ch);
-                // Handle error jika terjadi
                 return response()->json(['error' => $error]);
             } else {
-                // Handle respons yang berhasil
                 return response()->json(['data' => $response]);
             }
             
-            // Tutup sesi cURL
+            curl_close($ch);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'something fucked up']);
+        }
+    });
+    Route::get('/genres/anime/generate', function () {
+        try {
+            $url = "https://api.jikan.moe/v4/genres/anime";
+    
+            $ch = curl_init();
+            
+            curl_setopt($ch, CURLOPT_URL, $url);
+            
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            
+            $response = curl_exec($ch);
+            $response = json_decode($response, true); 
+            
+            if ($response === false) {
+                $error = curl_error($ch);
+                return response()->json(['error' => $error]);
+            } else {
+                return response()->json(['data' => $response]);
+            }
+            
             curl_close($ch);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'something fucked up']);

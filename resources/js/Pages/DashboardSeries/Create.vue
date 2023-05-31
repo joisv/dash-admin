@@ -84,7 +84,6 @@ const handleGenerate = async (id) => {
         form.season = result.value.season
         form.year = result.value.year
         form.synopsis = result.value.synopsis
-        console.log(result.value);
         isGenerate.value = false
         isError.value = false
     } catch (error) {
@@ -255,7 +254,7 @@ const handleGenerate = async (id) => {
                        
                         <div class="w-full h-28 overflow-auto mb-4 border-2 border-gray-200 rounded-md p-2 flex flex-wrap space-x-2">
                             <template v-for="( genre, index ) in props.genres" :key="genre.id">
-                                <div class="p-1 w-fit h-fit border-2 border-gray-400 rounded-md " :class="{'border-2 border-red-400' : form.errors.genres}">
+                                <div class="p-1 w-fit relative h-fit border-2 border-gray-400 rounded-md " :class="{'border-2 border-red-400' : form.errors.genres}">
                                      <input type="checkbox" :name="`genres${index+1}`" :id="`genres${index+1}`" class="opacity-50 absolute" :value="genre.id" v-model="form.genres" >
                                      <label :for="`genres${index+1}`" class="px-2 py-1 font-medium text-primaryBtn">{{ genre.names }}</label>
                                 </div>

@@ -38,21 +38,44 @@ watch(search, (value)=> {
 const isGenerate = ref(false)
 const isError = ref(false)
 const result = ref({})
+const err = ref('')
 
+const generate = useForm({
+    name: []
+})
 const handleGenerate = async () => {
     isGenerate.value = true
-    try {
-        const response = await axios.get(`/genres/anime`);
-        result.value = response.data.data;
-       
-        isGenerate.value = false
-        isError.value = false
-    } catch (error) {
-        isGenerate.value = false
-        isError.value = true
+    if (props.genres.data.length === 0) {
+        try {
+            const response = await axios.get(`/api/v1/genres/anime/generate`);
+            result.value = response.data.data.data;
+            console.log(result.value);
+            result.value.map(item => {
+                generate.name.push(item.name)
+            })
+            generate.post(route('generateme'))
+            isGenerate.value = false
+            isError.value = false
+        } catch (error) {
+            err.value = error
+            isGenerate.value = false
+            isError.value = true
+        }
+    } else {
+        alert('reset genres first')
     }
 };
+const reset = () => {
+    if(confirm('reset semua genre')){
+        if (props.genres.data.length === 0){
+           alert('no genres')
+        } else {
+            form.get(route('resetgenres'))
+        }
+    }
+}
 
+console.log(props.genres, err);
 const submit = () => {
     form.get(route('genres.create'))
 }
@@ -77,14 +100,8 @@ function edit(id) {
             </h2>
             <div>
                 <div class="bg-red-300 p-2 rounded-sm text-medium" v-if="isError">
-                    <h1>something went wrong</h1>
+                    <h1>{{ err }}</h1>
                 </div>
-                <ButtonComponent 
-                    class="bg-primaryBtn hover:bg-slate-800 focus:ring-4 focus:ring-slate-300 h-fit"
-                    children="generate"
-                    type="submit"
-                    @click="handleGenerate()"
-                />
             </div>
             <div class="max-w-7xl relative z-40">
                 <button @click="handleFlash" class="absolute right-20" v-if="flash">
@@ -98,13 +115,28 @@ function edit(id) {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 px-2">
                 <div class="bg-secondaryBtn overflow-hidden shadow-xl sm:rounded-lg md:p-10 p-2">
                         <div class="flex justify-between items-center space-x-3 sm:space-x-10">
-                            <form @submit.prevent="submit">
+                            <div class="flex space-x-4">
+                                <form @submit.prevent="submit">
+                                    <ButtonComponent 
+                                        class="bg-primaryBtn hover:bg-slate-800 focus:ring-4 focus:ring-slate-300"
+                                        children="Add Genres"
+                                        type="submit"
+                                    />
+                                </form>
                                 <ButtonComponent 
-                                    class="bg-primaryBtn hover:bg-slate-800 focus:ring-4 focus:ring-slate-300"
-                                    children="Add Genres"
+                                    class="hover:bg-yellow-300 focus:ring-4 focus:ring-slate-300 h-fit"
+                                    :class="isGenerate ? 'bg-yellow-400 ': 'bg-accent'"
+                                    children="generate"
                                     type="submit"
+                                    @click="handleGenerate()"
                                 />
-                            </form>
+                                <ButtonComponent 
+                                    class="bg-red-600 hover:bg-red-400 focus:ring-4 focus:ring-red-300 h-fit"
+                                    children="reset"
+                                    type="submit"
+                                    @click="reset()"
+                                />
+                            </div>
                             <SearchInput 
                                 v-model="search"
                                 placeholder="serach me..."
@@ -137,7 +169,7 @@ function edit(id) {
                         </template>
                     </DataTables>
                 </div>
-                <!-- <Pagination :data="episodes"/> -->
+                <Pagination :data="genres"/>
             </div>
      </AppLayout>
 </template>

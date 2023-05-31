@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\EpisodesController;
+use App\Http\Controllers\GenerateController;
 use App\Http\Controllers\GenresController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TokenController;
@@ -47,5 +48,7 @@ Route::middleware([
         $response = Http::get("https://api.jikan.moe/v4/anime/".$id."/full");
         return response()->json($response);
     });
-    Route::post('/anime/generate', [SearchController::class, 'index'])->name('gen');
+    // Route::post('/anime/generate', [SearchController::class, 'index'])->name('gen');
+    Route::post('/anime/generate', [GenerateController::class, 'genres'])->name('generateme');
+    Route::get('/anime/generate/reset', [GenerateController::class, 'resetgenres'])->name('resetgenres');
 });
