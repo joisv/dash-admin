@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
-    public function popular() {
+    public function getTopAnime() {
         try {
 
             $series = Series::orderBy('views', 'desc')
@@ -46,7 +46,7 @@ class ApiController extends Controller
             return response()->json(['error' => 'Something went wrong'], 500);
         }
     }
-    public function show(Series $series) {
+    public function getAnimeById(Series $series) {
         try {
             $series->increment('views');
             $data = $series->load( 'genres', 'episodes', 'resolutions');
@@ -56,7 +56,7 @@ class ApiController extends Controller
             return response()->json(['error' => 'not found'], 404);
         }
     }
-    public function showEps(Episodes $episodes) {
+    public function getAnimeEpisodeById(Episodes $episodes) {
         try {
             $episodes->increment('views');
             $data = $episodes->load('resolutions');
@@ -66,7 +66,7 @@ class ApiController extends Controller
             return response()->json(['error' => 'not found'], 404);
         }
     }
-    public function genres() {
+    public function getAnimeGenres() {
         try {
 
             $genres = Genres::orderBy('created_at', 'desc')
@@ -79,11 +79,42 @@ class ApiController extends Controller
             return response()->json(['error' => 'Something went wrong'], 500);
         }
     }
-    public function genresQ(Genres $genres) {
+    public function getAnimeSearch(Request $request) {
         try {
 
-            $genres = $genres->load('series');
-            return response()->json(['data' => $genres], 200);
+            $query = Series::query(); // Menginisialisasi query builder untuk model Series
+
+            $filters = $request->only(['score', 'genres', 'status']);
+
+            foreach ($filters as $key => $value) {
+                if ($request->filled($key)) {
+                    if ($key === 'genres') {
+                        $query->whereHas('genres', function ($q) use ($value) {
+                            $q->where('names', $value);
+                        });
+                    } else {
+                        $query->where($key, $value);
+                    }
+                }
+            }
+
+            $data = $query->get();
+
+            return response()->json(['data' => $data], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
+    }
+
+    public function getSeason($year, $season){
+        try {
+
+            $data = Series::where('year', $year)
+            ->where('season', $season)
+            ->get();
+
+            return response()->json(['data' => $data], 200);
 
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Something went wrong'], 500);

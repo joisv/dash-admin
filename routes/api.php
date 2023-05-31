@@ -75,10 +75,11 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function (){
         }
     });
 
-    Route::get('/top/anime', [ApiController::class, 'popular']);
+    Route::get('/top/anime', [ApiController::class, 'getTopAnime']);
     Route::get('/new', [ApiController::class, 'new']);
-    Route::get('/anime/{series:slug}/full', [ApiController::class, 'show']);
-    Route::get('/anime/{episodes:id}/episode', [ApiController::class, 'showeps']);
-    Route::get('/genres/anime', [ApiController::class, 'genres']);
-    Route::get('/genres/q/{genres:id}', [ApiController::class, 'genresQ']);
+    Route::get('/anime/{series:id}/full', [ApiController::class, 'getAnimeById']);
+    Route::get('/anime/{episodes:id}/episode', [ApiController::class, 'getAnimeEpisodeById']);
+    Route::get('/genres/anime', [ApiController::class, 'getAnimeGenres']);
+    Route::get('/anime', [ApiController::class, 'getAnimeSearch']);
+    Route::get('/seasons/{year}/{season}', [ApiController::class, 'getSeason']);
 });
