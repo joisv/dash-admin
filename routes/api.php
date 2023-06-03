@@ -82,4 +82,5 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function (){
     Route::get('/genres/anime', [ApiController::class, 'getAnimeGenres']);
     Route::get('/anime', [ApiController::class, 'getAnimeSearch']);
     Route::get('/seasons/{year}/{season}', [ApiController::class, 'getSeason']);
+    Route::post('/report', [ApiController::class, 'postReport']);
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Episodes;
 use App\Models\Genres;
+use App\Models\Report;
 use App\Models\Series;
 use Illuminate\Http\Request;
 
@@ -84,7 +85,7 @@ class ApiController extends Controller
 
             $query = Series::query(); // Menginisialisasi query builder untuk model Series
 
-            $filters = $request->only(['score', 'genres', 'status']);
+            $filters = $request->only(['score', 'genres', 'status', 'type']);
 
             foreach ($filters as $key => $value) {
                 if ($request->filled($key)) {
@@ -118,6 +119,21 @@ class ApiController extends Controller
 
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Something went wrong'], 500);
+        }
+    }
+
+    public function postReport( Request $request ) {
+
+        try {
+    
+            $report = new Report();
+            $report->title = $request['title'];
+            $report->content = $request['content'];
+            $report->save();
+    
+            return response()->json(['message' => 'report created succesfully'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'something went wrong'], 500);
         }
     }
 
