@@ -62,8 +62,6 @@ function edit(id) {
 }
 </script>
 
-
-
 <template>
     <AppLayout title="Dashboard">
         <template #header>

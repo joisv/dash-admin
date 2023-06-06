@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\ApiController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
@@ -76,11 +77,19 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function (){
     });
 
     Route::get('/top/anime', [ApiController::class, 'getTopAnime']);
-    Route::get('/new', [ApiController::class, 'new']);
+    Route::get('/anime/new', [ApiController::class, 'getAnime']);
+    Route::get('/anime/new/episodes', [ApiController::class, 'getAnimeEpisodes']);
     Route::get('/anime/{series:id}/full', [ApiController::class, 'getAnimeById']);
     Route::get('/anime/{episodes:id}/episode', [ApiController::class, 'getAnimeEpisodeById']);
     Route::get('/genres/anime', [ApiController::class, 'getAnimeGenres']);
     Route::get('/anime', [ApiController::class, 'getAnimeSearch']);
     Route::get('/seasons/{year}/{season}', [ApiController::class, 'getSeason']);
     Route::post('/report', [ApiController::class, 'postReport']);
+});
+
+// Route::middleware('auth:sanctum')->get('/csrf-cookie', function (Request $request) {
+//     return response()->json(['csrfCookie' => true])->cookie('XSRF-TOKEN', csrf_token(), 0, null, null, false, false);
+// });
+Route::middleware('auth:sanctum')->get('/csrf-cookie', function (Request $request) {
+    return response()->json(['csrfCookie' => Cookie::get('XSRF-TOKEN')]);
 });

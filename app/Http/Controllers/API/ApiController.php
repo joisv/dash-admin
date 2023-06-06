@@ -23,11 +23,11 @@ class ApiController extends Controller
             return response()->json(['error' => 'Something went wrong'], 500);
         }
     }
-    public function top() {
+    public function getAnime() {
         try {
 
-            $series = Series::orderBy('views', 'desc')
-                        ->paginate(8)->withQueryString();
+            $series = Series::orderBy('created_at', 'desc')
+                        ->paginate(9)->withQueryString();
 
             return response()->json(['data' => $series], 200);
 
@@ -35,10 +35,10 @@ class ApiController extends Controller
             return response()->json(['error' => 'Something went wrong'], 500);
         }
     }
-    public function new() {
+    public function getAnimeEpisodes() {
         try {
 
-            $series = Series::orderBy('created_at', 'desc')
+            $series = Episodes::orderBy('created_at', 'desc')->with('series')
                         ->paginate(9)->withQueryString();
 
             return response()->json(['data' => $series], 200);

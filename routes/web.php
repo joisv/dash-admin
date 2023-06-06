@@ -7,6 +7,7 @@ use App\Http\Controllers\GenerateController;
 use App\Http\Controllers\GenresController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TokenController;
+use App\Models\Report;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Request;
@@ -44,11 +45,22 @@ Route::middleware([
     Route::resource('/dashboard/genres', GenresController::class)->names('genres');
     Route::get('/api-token', [TokenController::class, 'index'])->name('token');
     Route::post('/api-token/create', [TokenController::class, 'gettoken'])->name('gettoken');
-    Route::get('/anime/full', function ($id) {
-        $response = Http::get("https://api.jikan.moe/v4/anime/".$id."/full");
-        return response()->json($response);
-    });
-    // Route::post('/anime/generate', [SearchController::class, 'index'])->name('gen');
+
+    // report
+    Route::get('/anime-report', function () {
+        $data = Report::all();
+        return Inertia::render('Reports', [
+            'data' => $data
+        ]);
+    })->name('reports');
+    Route::delete('/anime-report/delete/{id}', function($id){
+        $report = Report::find($id);
+        $report->delete();
+        return redirect()->route('reports')->with('message', 'Succesfully deleted');
+    })->name('reportdelete');
+    Route::get('/anime/report/reset', [GenerateController::class, 'resetreport'])->name('resetreport');
+    
+    // generate
     Route::post('/anime/generate', [GenerateController::class, 'genres'])->name('generateme');
     Route::get('/anime/generate/reset', [GenerateController::class, 'resetgenres'])->name('resetgenres');
 });

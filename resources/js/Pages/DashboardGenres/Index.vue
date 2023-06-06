@@ -49,7 +49,6 @@ const handleGenerate = async () => {
         try {
             const response = await axios.get(`/api/v1/genres/anime/generate`);
             result.value = response.data.data.data;
-            console.log(result.value);
             result.value.map(item => {
                 generate.name.push(item.name)
             })
@@ -75,7 +74,6 @@ const reset = () => {
     }
 }
 
-console.log(props.genres, err);
 const submit = () => {
     form.get(route('genres.create'))
 }

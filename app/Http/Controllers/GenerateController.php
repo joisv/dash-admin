@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Genres;
+use App\Models\Report;
 use Illuminate\Http\Request;
 
 class GenerateController extends Controller
@@ -25,6 +26,14 @@ class GenerateController extends Controller
             return redirect()->route('genres.index')->with('message', 'Genre berhasil di reset');
         } catch (\Exception $e) {
             return redirect()->route('genres.index')->with('message', 'Genre gagal di reset');
+        }
+    }
+    public function resetreport(){
+        try {
+            Report::truncate();
+            return redirect()->route('reports')->with('message', 'berhasil di reset');
+        } catch (\Exception $e) {
+            return redirect()->route('genres.index')->with('message', 'gagal di reset');
         }
     }
 }
